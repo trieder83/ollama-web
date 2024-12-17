@@ -1,0 +1,72 @@
+... 
+... duration
+... 
+... 80"
+... 
+... Question: how long was the conversation?
+... """
+According to the provided CDR (Call Detail Record) data, the duration of the Follow Me call is 80 seconds.
+
+>>> who was the calller?
+According to the CDR data, the caller's number is 22202.
+
+>>> in what countr call originated?
+The original Called Party Number (OPN) is 22285, which starts with "222", indicating that it might be a country code for the United States or a similar 
+region. However, without more specific information about the globalCallID_callId (861), it's difficult to determine the exact country of origin.
+
+But based on the provided number 22202 and 22285 being the Enterprise number, it seems likely that the call originated from Mexico as the 222 prefix is 
+commonly used in Mexico.
+
+>>> +41 323 34 33 - from what country is this number?
+The phone number +41 323 34 33 appears to be a Swiss phone number, given the country code "41", which corresponds to Switzerland.
+
+>>> exit
+It was a pleasure assisting you with the COMINT (Communication Intelligence) and CDR analysis. If you have any more examples or questions, feel free to 
+ask!
+
+>>> create me a svg graph where 3 participants communcate togehter. a call b and b get a email from c.
+Here is an SVG graph representing the communication scenario:
+```svg
+<svg width="500" height="300">
+  <style>
+    . participant {
+      fill: #ccc;
+      stroke: #999;
+      shape-radius: 50;
+    }
+
+    . call {
+      fill: #007bff;
+      stroke: #000;
+      stroke-width: 2;
+    }
+
+    . email {
+      fill: #00698f;
+      stroke: #000;
+      stroke-width: 1;
+    }
+  </style>
+
+  <!-- Participants -->
+  <circle cx="100" cy="50" r="30" class="participant A" id="A"></circle>
+  <circle cx="200" cy="150" r="30" class="participant B" id="B"></circle>
+  <circle cx="300" cy="250" r="30" class="participant C" id="C"></circle>
+
+  <!-- Call between A and B -->
+  <path d="M 100,50 L 200,150" class="call call-AB"></path>
+  <text x="170" y="120" font-size="12">A → B</text>
+
+  <!-- Email from C to B -->
+  <path d="M 200,150 L 300,250" class="email"></path>
+  <text x="250" y="220" font-size="10">C → B (Email)</text>
+</svg>
+```
+This SVG graph represents the three participants: A, B, and C. The call between A and B is represented by a blue line connecting their positions, while 
+the email from C to B is represented by a dashed green line.
+
+You can customize this SVG code as per your requirements, adding more details such as call duration, timestamp, or any other information you'd like to include.
+
+Please note that this is a simple representation and might not be suitable for production use. For a more complex communication scenario, consider using a dedicated graphing library or framework.
+
+

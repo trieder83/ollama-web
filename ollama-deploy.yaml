@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ollama-config
+  namespace: default
+data:
+  Modelfile: |
+    FROM llama3.2
+    # set the temperature to 1 [higher is more creative, lower is more coherent]
+    PARAMETER temperature 1
+    # set the system message
+    SYSTEM """
+    You are a COMINT Expert and act as external observer. Your answers consider the parcipants and the time frame of any events and communcations.
+    """
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama
+  labels:
+    app: ollama
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+    spec:
+      containers:
+      - name: ollama
+        image: ollama/ollama
+        imagePullPolicy: IfNotPresent  # Only pull image if not present locally
+        ports:
+        - containerPort: 11434
+        volumeMounts:
+        - name: ollama-data
+          mountPath: /root/.ollama
+        - name: ollama-config
+          mountPath: /root/model
+        resources:
+          limits:
+            nvidia.com/gpu: 1  # Equivalent to --gpus=all
+      volumes:
+      - name: ollama-data
+        persistentVolumeClaim:
+          claimName: ollama-pvc
+      - name: ollama-config
+        configMap:
+          name: ollama-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-service
+spec:
+  selector:
+    app: ollama
+  ports:
+  - protocol: TCP
+    port: 11434
+    targetPort: 11434
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-service-internal
+spec:
+  selector:
+    app: ollama
+  ports:
+  - protocol: TCP
+    port: 11433
+    targetPort: 11434
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ollama-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
