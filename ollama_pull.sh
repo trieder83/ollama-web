@@ -13,4 +13,5 @@ pod=$(kubectl get pods -n default -l app=ollama -o=jsonpath='{.items[0].metadata
 
 # Then execute the command
 #kubectl exec -it $pod -n default -- ollama pull mxbai-embed-large
-kubectl exec -it $pod -n default -- ollama pull all-minilm
+#kubectl exec -it $pod -n default -- ollama pull all-minilm
+kubectl exec -it $pod -n default -- ollama pull snowflake-arctic-embed2
