@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: streamlit-app-code
+data:
+  app.py: |
+    import streamlit as st
+    import requests
+    import os
+    
+    def query_oolama_service(prompt):
+        """Send a query to the Oolama service."""
+        oolama_service_url = os.getenv("OOLAMA_SERVICE_URL", "http://oolama-service.default.svc.cluster.local:8000/query")
+        try:
+            response = requests.post(oolama_service_url, json={"prompt": prompt})
+            if response.status_code == 200:
+                return response.json().get("response", "No response received.")
+            else:
+                return f"Error: {response.status_code} - {response.text}"
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
+    
+    # Streamlit app setup
+    st.title("Oolama Frontend")
+    
+    st.write("Ask a question and get a response from Oolama!")
+    
+    # User prompt input
+    user_prompt = st.text_area("Enter your prompt:")
+    
+    if st.button("Submit"):
+        if user_prompt.strip():
+            with st.spinner("Querying Oolama..."):
+                oolama_response = query_oolama_service(user_prompt)
+            st.write("### Response:")
+            st.write(oolama_response)
+        else:
+            st.warning("Please enter a valid prompt.")
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streamlit-app
+  labels:
+    app: streamlit-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: streamlit-app
+  template:
+    metadata:
+      labels:
+        app: streamlit-app
+    spec:
+      containers:
+      - name: streamlit-container
+        image: python:3.9-slim
+        command: ["ls","streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+        ports:
+        - containerPort: 8501
+        env:
+        - name: OOLAMA_SERVICE_URL
+          value: "http://oolama-service-internal.default.svc.cluster.local:11433/query"
+        volumeMounts:
+        - mountPath: /app
+          name: app-volume
+      volumes:
+      - name: app-volume
+        configMap:
+          name: streamlit-app-code
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: streamlit-service
+spec:
+  selector:
+    app: streamlit-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8501
+  type: LoadBalancer
+
