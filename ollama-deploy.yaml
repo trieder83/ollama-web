@@ -12,6 +12,14 @@ data:
     SYSTEM """
     You are a COMINT Expert and act as external observer. Your answers consider the parcipants and the time frame of any events and communcations.
     """
+  ModelfileMistral: |
+    FROM cas/mistral-instruct-v0.2-2x7b-moe:latest
+    # set the temperature to 1 [higher is more creative, lower is more coherent]
+    PARAMETER temperature 1
+    # set the system message
+    SYSTEM """
+    You are a helpful teacher. Your answers aim to help to solve the question with step by step instructions.
+    """
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -87,4 +95,22 @@ spec:
   resources:
     requests:
       storage: 10Gi
-
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ollama-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: charon
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ollama-service
+            port:
+              number: 11433
