@@ -41,6 +41,11 @@ spec:
       - name: ollama
         image: ollama/ollama
         imagePullPolicy: IfNotPresent  # Only pull image if not present locally
+        env:
+        - name: OLLAMA_CONTEXT_LENGTH
+          value: "8192"
+        - name: OLLAMA_NUM_PARALLEL
+          value: "1"
         ports:
         - containerPort: 11434
         volumeMounts:

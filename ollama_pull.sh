@@ -17,5 +17,10 @@ pod=$(kubectl get pods -n default -l app=ollama -o=jsonpath='{.items[0].metadata
 #kubectl exec -it $pod -n default -- ollama pull snowflake-arctic-embed2
 # kubectl exec -it $pod -n default -- ollama pull mixtral:8x7b
 #kubectl exec -it $pod -n default -- ollama pull codellama:7b
-kubectl exec -it $pod -n default -- ollama pull deepseek-r1
+#kubectl exec -it $pod -n default -- ollama pull deepseek-r1
+#kubectl exec -it $pod -n default -- ollama pull bge-m3:567m
+#kubectl exec -it $pod -n default -- ollama pull all-minilm:33m
+kubectl exec -it $pod -n default -- ollama pull qwen2.5:3b
+kubectl exec -it $pod -n default -- ollama pull qwen2.5:7b
 #kubectl exec -it $pod -n default -- ollama pull cas/mistral-instruct-v0.2-2x7b-moe
+kubectl exec -it $pod -n default -- ollama run chanwit/flux-7b
