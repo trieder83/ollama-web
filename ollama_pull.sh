@@ -25,3 +25,5 @@ kubectl exec -it $pod -n default -- ollama pull qwen2.5:7b
 #kubectl exec -it $pod -n default -- ollama pull cas/mistral-instruct-v0.2-2x7b-moe
 kubectl exec -it $pod -n default -- ollama run chanwit/flux-7b
 kubectl exec -it $pod -n default -- ollama run qwen2:1.5b
+kubectl exec -it $pod -n default -- ollama run codegemma:7b
+kubectl exec -it $pod -n default -- ollama run qwen2.5-coder:3b

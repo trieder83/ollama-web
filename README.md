@@ -12,3 +12,7 @@ podman exec ollama ollama pull mistral:7b
 podman exec ollama ollama pull gemma2:9b
 podman exec ollama ollama pull codelama:13b
 podman exec ollama ollama pull llama3.2-vision:11b
+
+
+# pull micork8s image
+microk8s.ctr  i  pull vllm/vllm-openai:latest

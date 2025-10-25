@@ -4,6 +4,12 @@ metadata:
   name: ollama-config
   namespace: default
 data:
+  ModelfileCOMINT: |
+    FROM /tmp/gemma-3-finetune.Q8_0.gguf
+    # set the system message
+    SYSTEM """
+    You are a COMINT Expert and act as external observer. Your answers consider the parcipants and the time frame of any events and communcations.
+    """
   Modelfile: |
     FROM llama3.2
     # set the temperature to 1 [higher is more creative, lower is more coherent]
@@ -96,6 +102,8 @@ spec:
           value: "8192"
         - name: OLLAMA_NUM_PARALLEL
           value: "1"
+        - name: OLLAMA_ORIGINS
+          value: "*"
         ports:
         - containerPort: 11434
         volumeMounts:
